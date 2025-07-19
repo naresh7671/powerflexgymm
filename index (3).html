@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power Flex Gym</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light gray-blue background */
+            color: #2d3748; /* Darker text for readability */
+        }
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #64748b;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        /* Custom modal styles for alerts */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: auto;
+            padding: 2rem;
+            border-radius: 0.75rem; /* Rounded corners */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            max-width: 90%;
+            width: 400px;
+            text-align: center;
+        }
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Success/Error Modal -->
+    <div id="responseModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button" onclick="document.getElementById('responseModal').classList.add('hidden')">&times;</span>
+            <p id="modalMessage" class="text-lg font-semibold text-gray-800"></p>
+            <button onclick="document.getElementById('responseModal').classList.add('hidden')"
+                    class="mt-6 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm py-4 sticky top-0 z-50">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="#" class="text-2xl sm:text-3xl font-extrabold text-indigo-700 flex items-center">
+                <svg class="w-7 h-7 sm:w-8 sm:h-8 mr-2 text-indigo-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+                </svg>
+                Power Flex
+            </a>
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden text-gray-600 hover:text-indigo-700 focus:outline-none">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex space-x-8">
+                <a href="#home" class="text-gray-600 hover:text-indigo-700 font-medium transition duration-300">Home</a>
+                <a href="#about" class="text-gray-600 hover:text-indigo-700 font-medium transition duration-300">About</a>
+                <a href="#services" class="text-gray-600 hover:text-indigo-700 font-medium transition duration-300">Services</a>
+                <a href="#testimonials" class="text-gray-600 hover:text-indigo-700 font-medium transition duration-300">Testimonials</a>
+                <a href="#contact" class="text-gray-600 hover:text-indigo-700 font-medium transition duration-300">Contact</a>
+                <a href="#book-now" class="px-5 py-2 bg-indigo-600 text-white font-semibold rounded-full shadow-md hover:bg-indigo-700 transition duration-300">Book Now</a>
+            </nav>
+        </div>
+        <!-- Mobile Menu Overlay -->
+        <nav id="mobile-menu" class="md:hidden bg-white px-4 pt-2 pb-4 space-y-2 hidden">
+            <a href="#home" class="block text-gray-700 hover:bg-indigo-50 px-3 py-2 rounded-md font-medium">Home</a>
+            <a href="#about" class="block text-gray-700 hover:bg-indigo-50 px-3 py-2 rounded-md font-medium">About</a>
+            <a href="#services" class="block text-gray-700 hover:bg-indigo-50 px-3 py-2 rounded-md font-medium">Services</a>
+            <a href="#testimonials" class="block text-gray-700 hover:bg-indigo-50 px-3 py-2 rounded-md font-medium">Testimonials</a>
+            <a href="#contact" class="block text-gray-700 hover:bg-indigo-50 px-3 py-2 rounded-md font-medium">Contact</a>
+            <a href="#book-now" class="block px-3 py-2 bg-indigo-600 text-white font-semibold rounded-md text-center hover:bg-indigo-700 transition duration-300">Book Now</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative bg-gradient-to-r from-indigo-600 to-purple-700 text-white py-20 md:py-32 overflow-hidden">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
+                Unleash Your Inner Strength at <span class="text-yellow-300">Power Flex Gym</span>
+            </h1>
+            <p class="text-lg md:text-xl mb-10 max-w-3xl mx-auto">
+                Your ultimate destination for fitness, strength, and well-being. Join our community today!
+            </p>
+            <a href="#book-now" class="inline-block px-8 py-4 bg-yellow-400 text-indigo-800 font-bold text-lg rounded-full shadow-xl hover:bg-yellow-500 transition duration-300 transform hover:scale-105">
+                Start Your Free Trial!
+            </a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12 text-gray-800">About Us</h2>
+            <div class="flex flex-col md:flex-row items-center gap-8">
+                <div class="md:w-1/2">
+                    <img src="https://placehold.co/600x400/667eea/ffffff?text=Gym+Equipment" alt="Gym Equipment" class="w-full h-auto rounded-xl shadow-lg object-cover">
+                </div>
+                <div class="md:w-1/2">
+                    <p class="text-lg leading-relaxed mb-4 text-gray-700">
+                        Power Flex Gym is dedicated to providing a dynamic and supportive environment for individuals to achieve their fitness aspirations. We offer state-of-the-art equipment, a wide array of classes, and personalized training programs designed to cater to all levels.
+                    </p>
+                    <p class="text-lg leading-relaxed text-gray-700">
+                        Our certified trainers are committed to guiding you through your fitness journey, ensuring you get the most out of every workout. Join our community and discover a stronger, healthier you!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-16 md:py-24 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12 text-gray-800">Our Services</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service Card 1 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center transform hover:scale-105 transition duration-300">
+                    <svg class="w-12 h-12 mx-auto mb-4 text-indigo-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                    </svg>
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Personal Training</h3>
+                    <p class="text-gray-600">Tailored workout plans and one-on-one guidance to reach your specific goals.</p>
+                </div>
+                <!-- Service Card 2 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center transform hover:scale-105 transition duration-300">
+                    <svg class="w-12 h-12 mx-auto mb-4 text-indigo-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"></path>
+                    </svg>
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Group Classes</h3>
+                    <p class="text-gray-600">Energizing classes like Yoga, Zumba, HIIT, and Spin for all fitness levels.</p>
+                </div>
+                <!-- Service Card 3 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center transform hover:scale-105 transition duration-300">
+                    <svg class="w-12 h-12 mx-auto mb-4 text-indigo-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zm3 8a1 1 0 100 2h6a1 1 0 100-2H7z"></path>
+                        <path fill-rule="evenodd" d="M5 4a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2H5zm-1 8V6a1 1 0 011-1h10a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Nutrition Plans</h3>
+                    <p class="text-gray-600">Expert-designed meal plans to complement your workouts and optimize results.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12 text-gray-800">What Our Members Say</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Testimonial Card 1 -->
+                <div class="bg-gray-50 rounded-xl shadow-lg p-6 flex flex-col items-center text-center">
+                    <img src="https://placehold.co/80x80/cbd5e0/ffffff?text=P1" alt="Member Photo 1" class="w-20 h-20 rounded-full mb-4 object-cover">
+                    <p class="text-lg italic text-gray-700 mb-4">"Power Flex Gym has transformed my fitness journey! The trainers are incredibly supportive, and the atmosphere is always motivating."</p>
+                    <p class="font-semibold text-indigo-600">- Jane Doe</p>
+                </div>
+                <!-- Testimonial Card 2 -->
+                <div class="bg-gray-50 rounded-xl shadow-lg p-6 flex flex-col items-center text-center">
+                    <img src="https://placehold.co/80x80/cbd5e0/ffffff?text=P2" alt="Member Photo 2" class="w-20 h-20 rounded-full mb-4 object-cover">
+                    <p class="text-lg italic text-gray-700 mb-4">"I love the variety of classes and the clean, modern facilities. It's truly a top-notch gym experience."</p>
+                    <p class="font-semibold text-indigo-600">- John Smith</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Booking Section -->
+    <section id="book-now" class="py-16 md:py-24 bg-indigo-700 text-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">Book Your Appointment</h2>
+            <div class="flex flex-col md:flex-row gap-8">
+                <!-- Contact Info -->
+                <div class="md:w-1/2 bg-indigo-800 p-8 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-semibold mb-6">Get in Touch</h3>
+                    <p class="text-lg mb-4">
+                        <strong class="font-medium">Address:</strong> 123 Fitness Ave, Gym City, 12345
+                    </p>
+                    <p class="text-lg mb-4">
+                        <strong class="font-medium">Phone:</strong> (123) 456-7890
+                    </p>
+                    <p class="text-lg mb-4">
+                        <strong class="font-medium">Email:</strong> info@powerflexgym.com
+                    </p>
+                    <p class="text-lg">
+                        <strong class="font-medium">Hours:</strong> Mon-Fri: 6 AM - 10 PM | Sat-Sun: 8 AM - 8 PM
+                    </p>
+                </div>
+
+                <!-- Booking Form -->
+                <div class="md:w-1/2 bg-white p-8 rounded-xl shadow-lg text-gray-800">
+                    <h3 class="text-2xl font-semibold mb-6 text-center">Schedule Your Visit</h3>
+                    <form id="bookingForm" class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
+                            <input type="text" id="name" name="name" required
+                                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                            <input type="email" id="email" name="email" required
+                                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="service" class="block text-sm font-medium text-gray-700 mb-1">Service</label>
+                            <select id="service" name="service" required
+                                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="">Select a Service</option>
+                                <option value="personal-training">Personal Training</option>
+                                <option value="group-class">Group Class</option>
+                                <option value="gym-access">Gym Access</option>
+                                <option value="free-trial">Free Trial</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Preferred Date</label>
+                            <input type="date" id="date" name="date" required
+                                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="time" class="block text-sm font-medium text-gray-700 mb-1">Preferred Time</label>
+                            <input type="time" id="time" name="time" required
+                                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+                        <button type="submit"
+                                class="w-full px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-300 transform hover:scale-105">
+                            Book Now
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2025 Power Flex Gym. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when a link is clicked
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Simple form submission handler
+        document.getElementById('bookingForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const service = document.getElementById('service').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+
+            const modalMessage = document.getElementById('modalMessage');
+            const responseModal = document.getElementById('responseModal');
+
+            if (name && email && service && date && time) {
+                modalMessage.textContent = `Appointment for ${service} booked for ${name} on ${date} at ${time}. A confirmation email will be sent to ${email}.`;
+                responseModal.classList.remove('hidden');
+                // In a real application, you would send this data to a server
+                console.log('Booking submitted:', { name, email, service, date, time });
+                this.reset(); // Clear the form
+            } else {
+                modalMessage.textContent = 'Please fill in all fields to book your appointment.';
+                responseModal.classList.remove('hidden');
+            }
+        });
+
+        // Close modal when clicking outside of it
+        window.addEventListener('click', function(event) {
+            const responseModal = document.getElementById('responseModal');
+            if (event.target == responseModal) {
+                responseModal.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
